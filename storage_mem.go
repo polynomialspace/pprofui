@@ -20,7 +20,6 @@ import (
 
 	"github.com/cockroachdb/cockroach/pkg/util/syncutil"
 	"github.com/cockroachdb/cockroach/pkg/util/timeutil"
-	"github.com/cockroachdb/errors"
 )
 
 type record struct {
@@ -96,5 +95,5 @@ func (s *MemStorage) Get(id string, read func(io.Reader) error) error {
 			return read(bytes.NewReader(v.b))
 		}
 	}
-	return errors.Errorf("profile not found; it may have expired")
+	return fmt.Errorf("profile not found; it may have expired")
 }

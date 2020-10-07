@@ -25,7 +25,6 @@ import (
 	"time"
 
 	"github.com/cockroachdb/cockroach/pkg/util/syncutil"
-	"github.com/cockroachdb/errors"
 	"github.com/google/pprof/driver"
 	"github.com/google/pprof/profile"
 	"github.com/spf13/pflag"
@@ -155,7 +154,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		server := func(args *driver.HTTPServerArgs) error {
 			handler, ok := args.Handlers[remainingPath]
 			if !ok {
-				return errors.Errorf("unknown endpoint %s", remainingPath)
+				return fmt.Errorf("unknown endpoint %s", remainingPath)
 			}
 			handler.ServeHTTP(w, r)
 			return nil
@@ -224,7 +223,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.hook(profileName, r.Form.Get("labels") != "", func() { fetchHandler(rw, req) })
 
 		if rw.statusCode != http.StatusOK && rw.statusCode != 0 {
-			return errors.Errorf("unexpected status: %d", rw.statusCode)
+			return fmt.Errorf("unexpected status: %d", rw.statusCode)
 		}
 		return nil
 	}); err != nil {
